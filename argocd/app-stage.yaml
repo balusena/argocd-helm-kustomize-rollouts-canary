@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: myapp-stage
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/balusena/argocd-helm-kustomize-rollouts.git
+    targetRevision: HEAD
+    path: helm/myapp
+    helm:
+      valueFiles:
+        - ../../overlays/stage/values-stage.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: stage-myapp
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
