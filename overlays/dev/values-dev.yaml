@@ -1,8 +1,17 @@
 replicaCount: 2
+
 image:
+  repository: nginx       # <-- required
   tag: latest
+  pullPolicy: IfNotPresent  # optional but recommended
+
+containerPort: 80          # <-- required
+
 service:
+  type: NodePort
+  port: 80
   nodePort: 30081
+
 rollout:
   strategy: canary
   steps:
@@ -10,4 +19,5 @@ rollout:
     - pause: {duration: 15s}
     - setWeight: 50
     - pause: {duration: 15s}
-    - setWeight: 100    
+    - setWeight: 100
+   
