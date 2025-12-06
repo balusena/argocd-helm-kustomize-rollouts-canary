@@ -5,15 +5,17 @@ image:
   tag: latest
   pullPolicy: IfNotPresent
 
-service:
-  type: NodePort
-  port: 80
-  nodePort: 30080
-
 containerPort: 80
 
+service:
+  type: NodePort
+  nodePort: 30081
+
 rollout:
-  strategy: canary      # can be 'canary' or 'blueGreen'
+  strategy: canary
+  stableService: ""
+  canaryService: ""
+  autoPromotionEnabled: true
   steps:
     - setWeight: 25
     - pause: {duration: 15s}
