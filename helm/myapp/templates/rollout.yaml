@@ -25,17 +25,11 @@ spec:
       canaryService: {{ default (printf "%s-canary" .Chart.Name) .Values.rollout.canaryService }}
       steps:
         {{- range .Values.rollout.steps }}
-        - {{ toYaml . | nindent 8 | trim }}
+        - {{- if hasKey . "setWeight" }}
+            setWeight: {{ .setWeight }}
+          {{- else if hasKey . "pause" }}
+            pause:
+              duration: {{ .pause.duration }}
+          {{- end }}
         {{- end }}
-    {{- else if eq .Values.rollout.strategy "blueGreen" }}
-    blueGreen:
-      activeService: {{ default (printf "%s-active" .Chart.Name) .Values.rollout.activeService }}
-      previewService: {{ default (printf "%s-preview" .Chart.Name) .Values.rollout.previewService }}
-      autoPromotionEnabled: {{ .Values.rollout.autoPromotionEnabled | default true }}
-    {{- else }}
-    # fallback default
-    canary:
-      stableService: {{ .Chart.Name }}-stable
-      canaryService: {{ .Chart.Name }}-canary
-      steps: []
     {{- end }}
