@@ -2,7 +2,7 @@ replicaCount: 5
 
 image:
   repository: nginx
-  tag: "1.23"
+  tag: latest
 
 service:
   nodePort: 30083
